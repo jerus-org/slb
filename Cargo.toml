@@ -25,6 +25,8 @@ clap = { version = "4.5.32", features = ["derive"] }
 clap-verbosity-flag = "3.0.2"
 config = { version = "0.15.11", default-features = false, features = ["toml"] }
 log = "0.4.26"
+rand = "0.9.0"
+rand_chacha = { version = "0.9.0", features = ["os_rng"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = [
     "env-filter",

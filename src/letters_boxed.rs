@@ -1,6 +1,8 @@
 use std::{collections::VecDeque, fmt::Display};
 
 mod weighted_word;
+use rand::{SeedableRng, seq::SliceRandom};
+use rand_chacha::ChaCha20Rng;
 use weighted_word::WeightedWord;
 
 #[derive(Debug)]
@@ -106,12 +108,13 @@ impl LettersBoxed {
     pub fn build_word_chain(&mut self) -> Result<(), Error> {
         tracing::info!("Building word chain");
         // Get the first word from the list of words
+        let mut rng = ChaCha20Rng::from_os_rng();
         let words = self.words.clone();
         let word_list = words.clone();
         let word_chain = Vec::new();
         let unused_letters = String::from_iter(self.letters.clone());
 
-        let word_chain = get_word(words, word_list, word_chain, unused_letters)?;
+        let word_chain = get_word(words, word_list, word_chain, unused_letters, &mut rng)?;
 
         self.word_chain = word_chain;
         Ok(())
@@ -126,26 +129,51 @@ impl LettersBoxed {
 #[tracing::instrument(skip(all_words, words_list))]
 pub fn get_word(
     all_words: Vec<String>,
-    words_list: Vec<String>,
+    mut words_list: Vec<String>,
     mut word_chain: Vec<String>,
     mut unused_letters: String,
+    rng: &mut ChaCha20Rng,
 ) -> Result<Vec<String>, Error> {
     let initial_unused_letters = unused_letters.clone();
 
+    // Shuffle the starting words list to get a random starting word
+    tracing::trace!("List before shuffle: {:#?}", &words_list[0..5]);
+    words_list.shuffle(rng);
+    tracing::trace!("List after shuffle: {:#?}", &words_list[0..5]);
     let mut words_list = words_list
         .iter()
         .map(|word| WeightedWord::new(word.clone(), unused_letters.clone()))
         .collect::<Vec<WeightedWord>>();
+    tracing::trace!(
+        "First words in the word list (not sorted): {:#?}",
+        &words_list[0..5]
+    );
+    tracing::trace!(
+        "Last word in the word list (not sorted): {:#?}",
+        &words_list.last()
+    );
     words_list.sort_by_key(|ww| ww.weight);
-    tracing::trace!("First word in the word list: {:#?}", &words_list[0]);
-    tracing::trace!("Last word in the word list: {:#?}", &words_list.last());
+    tracing::trace!(
+        "First words in the word list (sorted): {:#?}",
+        &words_list[0..5]
+    );
+    tracing::trace!(
+        "Last word in the word list (sorted): {:#?}",
+        &words_list.last()
+    );
     let words_list = words_list
         .iter()
         .rev()
         .map(|ww| ww.word.to_string())
         .collect::<Vec<String>>();
-    tracing::trace!("First word in the word list: {:#?}", &words_list[0]);
-    tracing::trace!("Last word in the word list: {:#?}", &words_list.last());
+    tracing::trace!(
+        "First word in the word list (reversed): {:#?}",
+        &words_list[0]
+    );
+    tracing::trace!(
+        "Last word in the word list (reversed): {:#?}",
+        &words_list.last()
+    );
 
     let mut words = VecDeque::from(words_list);
     // find a word that increases the letters used
@@ -200,6 +228,7 @@ pub fn get_word(
                 words_list,
                 next_word_chain,
                 next_unused_letters,
+                rng,
             ) {
                 Ok(chain) => {
                     word_chain = chain;
