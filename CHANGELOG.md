@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - ✨ add word source management(pr [#52])
+- ✨ add colorful crate to the project(pr [#53])
 
 ## [0.1.13] - 2025-04-05
 
@@ -193,6 +194,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#50]: https://github.com/jerus-org/slb/pull/50
 [#51]: https://github.com/jerus-org/slb/pull/51
 [#52]: https://github.com/jerus-org/slb/pull/52
+[#53]: https://github.com/jerus-org/slb/pull/53
 [Unreleased]: https://github.com/jerus-org/slb/compare/v0.1.13...HEAD
 [0.1.13]: https://github.com/jerus-org/slb/compare/v0.1.12...v0.1.13
 [0.1.12]: https://github.com/jerus-org/slb/compare/v0.1.11...v0.1.12

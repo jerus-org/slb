@@ -30,6 +30,7 @@ path = "src/main.rs"
 [dependencies]
 clap = { version = "4.5.32", features = ["derive"] }
 clap-verbosity-flag = "3.0.2"
+colorful = "0.3.2"
 config = { version = "0.15.11", default-features = false, features = [
     "toml",
 ] }
