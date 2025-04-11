@@ -67,9 +67,8 @@ impl Cmd {
         }
 
         tracing::info!("Loaded {} words", words.len());
-        let words = words
-            .filter_to_minimum_length(minimum_word_length)
-            .filter_no_repeated_letters();
+        let mut words = words.filter_to_minimum_length(minimum_word_length);
+        words.filter_no_repeated_letters();
 
         tracing::info!("Filtered words includes {} words", words.len());
 

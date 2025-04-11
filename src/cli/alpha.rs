@@ -81,9 +81,8 @@ impl Cmd {
 
         tracing::info!("Loaded {} words", words.len());
         const ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz";
-        let words = words
-            .filter_to_minimum_length(2)
-            .filter_includes_only_letters(ALPHABET);
+        let mut words = words.filter_to_minimum_length(2);
+        words.filter_includes_only_letters(ALPHABET);
 
         tracing::info!("Filtered words includes {} words", words.len());
 
